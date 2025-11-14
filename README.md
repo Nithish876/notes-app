@@ -1,50 +1,123 @@
-# Welcome to your Expo app 👋
+# Notes App – Professional React Native + Expo
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> **Offline-First • Type-Safe • Secure • Production-Ready**
 
-## Get started
+A **fully offline**, **privacy-first**, **type-safe** notes application built with **React Native + Expo**, designed to teach **professional-grade app development**.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## Features
 
-2. Start the app
+| Feature | Status |
+|-------|--------|
+| **Offline-First** | 100% `AsyncStorage` + `FileSystem` |
+| **Folders & Notes** | Nested CRUD with cascade delete |
+| **Backup / Restore** | JSON export/import via `expo-sharing` |
+| **Secure UUIDs** | `react-native-get-random-values` polyfill |
+| **Type Safety** | `Zod` validation on every write |
+| **Modern File API** | `File(dir, name).write()` / `.text()` |
+| **Expo Router** | File-based navigation |
+| **Obfuscation** | Hermes + `javascript-obfuscator` |
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## Tech Stack
+- React Native + Expo (SDK 51+)
+- TypeScript
+- Zod
+ AsyncStorage
+- Expo FileSystem (Modern API)
+- Expo Router
+- Hermes Engine
+- JavaScript Obfuscation
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Project Structure
 
 ```bash
-npm run reset-project
+src/
+├── app/                  # Expo Router screens
+├── components/           # Reusable UI
+├── features/
+│   ├── folders/          # Domain: CRUD, hooks, types
+│   └── notes/
+├── services/
+│   └── backup/           # exportBackup(), importBackup(uri)
+├── utils/
+│   ├── storage.ts        # AsyncStorage + Zod wrapper
+│   └── uuid.ts           # Secure v4
+├── constants/
+│   └── keys.ts           # Storage keys
+└── styles/
+    └── global.ts         # Shared styles
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## Getting Started
+1. Clone & Install
+```bash
+git clone https://github.com/yourusername/notes-app.git
+cd notes-app
+npm install
+```
+2. Run
+```bash
+npx expo start --clear
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Build for Production
+```
+bash eas build --profile production --platform all
+```
+Includes Hermes + code obfuscation.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Testing
+```
+npm test
+```
+Example: `folderApi.test.ts`
+```ts
+test('creates and lists folders', async () => {
+  const f = await folderApi.create('Work');
+  const list = await folderApi.list();
+  expect(list).toContainEqual(expect.objectContaining({ name: 'Work' }));
+});
+```
 
-## Join the community
+## Architecture
+Clean Architecture:
+- Domain → features/*/api
+- Presentation → components/, app/
+- Data → utils/storage, services/backup
 
-Join our community of developers creating universal apps.
+## Security & Privacy
+- No network
+- No permissions (except user-initiated file access)
+- Obfuscated JS bundle
+- No analytics
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Troubleshooting
+- **crypto.getRandomValues() error** → Add `import 'react-native-get-random-values';` in `app/_layout.tsx`
+- **URI is not absolute** → Use `Paths.document` + `new File(dir, name)`
+- **Backup not working** → Ensure `copyToCacheDirectory: true` in DocumentPicker
+
+## Roadmap
+- Dark Mode
+- Search (Fuse.js)
+- Encrypted Backup (expo-crypto)
+- Auto-Backup on Exit
+- iCloud / Google Drive Sync
+
+## Contributing
+- Fork & clone
+- Create branch: `git checkout -b feat/search`
+- Commit: `feat: add fuzzy search`
+- Open PR
+
+## License
+MIT License
+
+Built with clean code, type safety, and love.
+— 2025
